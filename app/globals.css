@@ -1,0 +1,168 @@
+@import "@fontsource/space-grotesk/400.css";
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/space-grotesk/700.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+@import "tailwindcss";
+
+/* ============================================================
+   FINANCILY — DESIGN SYSTEM
+   Single signature accent (electric lime-cyan) + a muted warm
+   tone for contrast. Editorial: hairlines, numbered sections,
+   mono captions, tactile grain. No multi-neon gradients.
+   ============================================================ */
+
+@theme {
+  /* ---- Color tokens ---- */
+  --color-ink: #05070D;          /* deep space base */
+  --color-navy: #0A0F1C;         /* raised surface */
+  --color-panel: rgba(9, 13, 26, 0.55);
+  --color-accent: #B6FF3C;       /* signature lime-cyan */
+  --color-warm: #C9B896;         /* muted warm secondary */
+
+  /* Remapped legacy names -> accent, so the whole site renders
+     the new single-accent system without touching every component. */
+  --color-cyan: #B6FF3C;
+  --color-violet: #B6FF3C;
+  --color-aurora: #B6FF3C;
+  --color-magenta: #C9B896;
+
+  --color-paper: #E9EFEA;
+  --color-muted: #8A93A6;
+
+  --color-line: rgba(233, 239, 234, 0.09);  /* 1px hairline */
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-scan: scan 3.4s ease-in-out infinite;
+  --animate-caret: caret 1s steps(1) infinite;
+  --animate-pulse-ring: pulseRing 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @keyframes scan {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(150px); }
+  }
+  @keyframes caret { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+  @keyframes pulseRing {
+    0% { transform: scale(0.6); opacity: 0.9; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  --animate-float: float 6s ease-in-out infinite;
+}
+
+/* ---------- Base ---------- */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-body);
+  font-feature-settings: "ss01";
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: rgba(182, 255, 60, 0.26); color: #0A0F1C; }
+
+/* Lens scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--color-ink); }
+::-webkit-scrollbar-thumb { background: rgba(182, 255, 60, 0.35); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(182, 255, 60, 0.55); }
+
+/* ---------- Utilities ---------- */
+
+/* Quiet panel — hairline, minimal blur (not "glass overload") */
+.glass {
+  background: var(--color-panel);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-line);
+  border-radius: 18px;
+}
+
+/* Hairline gradient border using accent + warm */
+.gradient-border {
+  position: relative;
+  background:
+    linear-gradient(var(--color-panel), var(--color-panel)) padding-box,
+    linear-gradient(140deg, rgba(182, 255, 60, 0.55), rgba(182, 255, 60, 0.08) 45%, rgba(201, 184, 150, 0.35)) border-box;
+  border: 1px solid transparent;
+}
+
+/* Accent text fill */
+.text-gradient {
+  background: linear-gradient(100deg, var(--color-accent), #ddffa5 55%, var(--color-warm));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Fine metric grid */
+.grid-lines {
+  background-image:
+    linear-gradient(rgba(233, 239, 234, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(233, 239, 234, 0.03) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+/* Film grain overlay */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Ambient accent mesh (slow drift, single accent + warm) */
+.radial-mesh {
+  background:
+    radial-gradient(50% 45% at 22% 12%, rgba(182, 255, 60, 0.10), transparent 62%),
+    radial-gradient(45% 45% at 80% 18%, rgba(182, 255, 60, 0.06), transparent 60%),
+    radial-gradient(55% 55% at 52% 96%, rgba(201, 184, 150, 0.08), transparent 62%);
+  animation: meshDrift 22s ease-in-out infinite alternate;
+}
+@keyframes meshDrift {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-1.5%, 1%, 0); }
+}
+
+/* Editorial: numbered section label */
+.sec-index {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* Outlined giant display word (footer / hero ghost) */
+.word-outline {
+  -webkit-text-stroke: 1px rgba(233, 239, 234, 0.14);
+  color: transparent;
+}
+
+/* Reduced motion: kill ambient loops + stop drift */
+@media (prefers-reduced-motion: reduce) {
+  .radial-mesh, .animate-marquee, .animate-float,
+  .animate-pulse-ring, .animate-scan, .animate-caret {
+    animation: none !important;
+  }
+  .radial-mesh { transform: none !important; }
+}
